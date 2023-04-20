@@ -1,3 +1,30 @@
 version: '3'
 services:
-  spro
+  springboot:
+      image: lokeshsdockerhub/springboot:VERSION
+      ports:
+       - 8080:8080
+      environment:
+      - MONGO_DB_HOSTNAME=mongo
+      - MONGO_DB_HOSTNAME=devdb
+      - MONGO_DB_PASSWORD=devdb@123
+      networks:
+       - springbootbridge
+  mongo:
+    image: lokeshsdockerhub/mongo
+    environment:
+    - MONGO_INITDB_ROOT_USERNAME=devdb
+    - MONGO_INITDB_ROOT_PASSWORD=devdb@123
+    networks:
+      - springbootbridge
+    volumes:
+      - mongodbvol:/data/devdb
+networks:
+  springbootbridge:
+     driver: bridge
+volumes:
+  mongodbvol:
+    driver: local
+
+    
+    
