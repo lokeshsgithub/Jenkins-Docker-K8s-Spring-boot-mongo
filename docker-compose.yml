@@ -20,7 +20,7 @@ services:
     networks:
       - springbootbridge
     volumes:
-      - mongodbvol:/data/devdb
+      - mongodbvol:/data/db
 networks:
   springbootbridge:
      driver: bridge
