@@ -1,4 +1,4 @@
-FROM maven:3.3.9-jdk-7-alpine as build
+FROM maven:3.3.9-alpine as build
 WORKDIR /app
 COPY . .
 RUN mvn clean package
