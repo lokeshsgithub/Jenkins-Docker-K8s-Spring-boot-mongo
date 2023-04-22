@@ -33,7 +33,12 @@ pipeline {
     
     stage('Building the Docker Image'){
         steps{
-            sh "docker build -t lokeshsdockerhub/springboot:$BUILD_NUMBER ."
+            sh "docker build -t lokeshsdockerhub/spring_boot:$BUILD_NUMBER ."
+        }
+    }
+     stage('Building the Docker Image'){
+        steps{
+            sh "docker build -t lokeshsdockerhub/spring_boot:$BUILD_NUMBER ."
         }
     }
     
@@ -41,17 +46,28 @@ pipeline {
         steps{
             withCredentials([string(credentialsId: 'Dockerhubpwd', variable: 'dockerhubpwd')]) {
             sh "docker login -u lokeshsdockerhub -p ${dockerhubpwd}"
-            sh "docker build -t lokeshsdockerhub/springboot:$BUILD_NUMBER ."
+            sh "docker build -t lokeshsdockerhub/spring_boot:$BUILD_NUMBER ."
         }
     }
     }
+
+
 
     stage('Update the Image tag composefile'){
         steps{
             sh "sed -i 's/VERSION/${BUILD_NUMBER}/g' docker-compose.yml"
         }
     }
-
+    
+    stage('Deploy the Image to Docker stack'){
+        steps{
+            sshagent(['ubuntu_credentials']) {
+           sh "scp -o stricthostkeychecking=no docker-compose.yml ubuntu@172.31.35.163:/home/ubuntu/docker-compose.yml"
+           sh "ssh -o stricthostkeychecking=no ubuntu@172.31.35.163 docker stack deploy --compose-file docker-compose.yml spring_boot"
+       }
+    }
+   
+    }
 
 
 
