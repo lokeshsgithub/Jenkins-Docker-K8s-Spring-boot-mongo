@@ -20,7 +20,7 @@ services:
     networks:
       - springbootappoverlay
     volumes:
-      - mongodbvol
+      - mongodbvol:/data/db
 networks:
   springbootappoverlay:
     driver: overlay
