@@ -14,9 +14,7 @@ services:
        - mongo
       deploy:
        replicas: 2
-       update_config:
-         parallelisam: 1
-         delay: 20s  
+        
 
    mongo:
       image: mongo
