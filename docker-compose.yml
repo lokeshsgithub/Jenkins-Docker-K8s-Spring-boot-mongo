@@ -1,32 +1,33 @@
 version: '3'
 services:
-  springboot:
-      depends_on:
-      - mongo
-      image: lokeshsdockerhub/springboot:VERSION
+    springbootapp:
+      images: lokeshsdockerhub/springboot_mongo:1
       ports:
        - 8080:8080
       environment:
       - MONGO_DB_HOSTNAME=mongo
-      - MONGO_DB_HOSTNAME=devdb
-      - MONGO_DB_PASSWORD=devdb@123
+      - MONGO_DB_USERNAME=devdb
+      - MONGO_DB_USERNAME=devdb@123
       networks:
-       - springbootbridge
-  mongo:
-    image: lokeshsdockerhub/mongo
-    environment:
-    - MONGO_INITDB_ROOT_USERNAME=devdb
-    - MONGO_INITDB_ROOT_PASSWORD=devdb@123
-    networks:
-      - springbootbridge
-    volumes:
-      - mongodbvol:/data/devdb
+        - springbootoverlay
+      depends_on:
+        - mongo
+    mongo:
+      image: mongo
+      environment:
+      - MONGO_INITDB_ROOT_USERNAME=devdb
+      - MONGO_INITDB_ROOT_PASSWORD=devdb@123
+      networks:
+        - springbootoverlay
+      volumes:
+        - mongodbvol:/data/db
 networks:
-  springbootbridge:
-     driver: bridge
+  springbootoverlay:
+    driver: overlay
 volumes:
   mongodbvol:
-    driver: local
+    external: true
 
-    
-    
+
+
+
