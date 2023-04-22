@@ -5,6 +5,9 @@ pipeline {
     environment{
         buildNumber = "BUILD_NUMBER"
     }
+    tools {
+        maven 'maven3.9.0'
+    }
     stages{ 
         
     stage('checkout code') {
@@ -28,30 +31,22 @@ pipeline {
     stage('Build the package: Maven') {
           steps{
               sh "mvn clean install"
+              sh "mvn clean package"
           }
       } 
     
     stage('Building the Docker Image'){
         steps{
-            sh "docker build -t lokeshsdockerhub/spring_boot:$BUILD_NUMBER ."
+            sh "docker build -t 800161990735.dkr.ecr.ap-south-1.amazonaws.com/spring-boot:$BUILD_NUMBER ."
         }
     }
-     stage('Building the Docker Image'){
+      
+    stage('Push the image into ECR Registry'){
         steps{
-            sh "docker build -t lokeshsdockerhub/spring_boot:$BUILD_NUMBER ."
+            sh "aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 800161990735.dkr.ecr.ap-south-1.amazonaws.com"
+            sh "docker push 800161990735.dkr.ecr.ap-south-1.amazonaws.com/spring-boot:$BUILD_NUMBER"
         }
     }
-    
-    stage('Push the image into Dockerhub'){
-        steps{
-            withCredentials([string(credentialsId: 'Dockerhubpwd', variable: 'dockerhubpwd')]) {
-            sh "docker login -u lokeshsdockerhub -p ${dockerhubpwd}"
-            sh "docker build -t lokeshsdockerhub/spring_boot:$BUILD_NUMBER ."
-        }
-    }
-    }
-
-
 
     stage('Update the Image tag composefile'){
         steps{
@@ -62,7 +57,7 @@ pipeline {
     stage('Deploy the Image to Docker stack'){
         steps{
             sshagent(['ubuntu_credentials']) {
-           sh "scp -o stricthostkeychecking=no docker-compose.yml ubuntu@172.31.35.163:/home/ubuntu/docker-compose.yml"
+           //sh "scp -o stricthostkeychecking=no docker-compose.yml ubuntu@172.31.35.163:/home/ubuntu/docker-compose.yml"
            sh "ssh -o stricthostkeychecking=no ubuntu@172.31.35.163 docker stack deploy --compose-file docker-compose.yml spring_boot"
        }
     }
