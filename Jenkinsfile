@@ -2,9 +2,7 @@ pipeline {
     agent {
         label 'citibanknode'
     }
-    environment{
-        buildNumber = "BUILD_NUMBER"
-    }
+     
     tools {
         maven 'maven3.9.0'
     }
@@ -37,7 +35,7 @@ pipeline {
     
     stage('Building the Docker Image'){
         steps{
-            sh "docker build -t 800161990735.dkr.ecr.ap-south-1.amazonaws.com/spring-boot: ."
+            sh "docker build -t 800161990735.dkr.ecr.ap-south-1.amazonaws.com/spring-boot ."
         }
     }
       
