@@ -1,31 +1,45 @@
-version: '3'
+version: '3.1'
+
 services:
-  springbootapp:
-    depends_on:
-      - mongo
+  springboot:
     image: lokeshsdockerhub/springboot:VERSION
+    restart: always # This will be ignored if we deploy in docker swarm
+    environment:
+    - MONGO_DB_HOSTNAME=mongo
+    - MONGO_DB_USERNAME=devdb
+    - MONGO_DB_PASSWORD=devdb123
     ports:
       - 8080:8080
-    environment:
-      - MONGO_DB_HOSTNAME=mongo
-      - MONGO_DB_USERNAME=devdb
-      - MONGO_DB_PASSWORD=devdb@123
+    working_dir: /opt/app
+    depends_on:
+      - mongo
     networks:
-      - springbootappoverlay
+    - springappnetwork  
+    deploy:  # This will be considered only in docker swarm.
+      replicas: 2
+      update_config:
+        parallelism: 1
+        delay: 20s
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 5
 
   mongo:
     image: mongo
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=devdb
-      - MONGO_INITDB_ROOT_PASSWORD=devdb@123
+    - MONGO_INITDB_ROOT_USERNAME=devdb
+    - MONGO_INITDB_ROOT_PASSWORD=devdb123
     volumes:
-      - mongodbvol:/data/db
+      - mongodb:/data/db
     restart: always
     networks:
-    - springbootappoverlay
-networks:
-  springbootappoverlay:
-    driver: overlay
+    - springappnetwork
+    
 volumes:
-  mongodbvol:
-    external: true
+  mongodb:
+    driver: overlay
+    
+networks:
+  springappnetwork:
+    driver: local
