@@ -3,7 +3,7 @@ services:
    springboot:
       image: 800161990735.dkr.ecr.ap-south-1.amazonaws.com/spring-boot:VERSION
       ports:
-       - 9090:9090
+       - 9000:9000
       environment:
       - MONGO_DB_HOSTNAME=mongo
       - MONGO_DB_USERNAME=devdb
