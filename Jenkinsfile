@@ -37,20 +37,14 @@ pipeline {
     
     stage('Building the Docker Image'){
         steps{
-            sh "docker build -t 800161990735.dkr.ecr.ap-south-1.amazonaws.com/spring-boot:$BUILD_NUMBER ."
+            sh "docker build -t 800161990735.dkr.ecr.ap-south-1.amazonaws.com/spring-boot: ."
         }
     }
       
     stage('Push the image into ECR Registry'){
         steps{
             sh "aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 800161990735.dkr.ecr.ap-south-1.amazonaws.com"
-            sh "docker push 800161990735.dkr.ecr.ap-south-1.amazonaws.com/spring-boot:$BUILD_NUMBER"
-        }
-    }
-
-    stage('Update the Image tag composefile'){
-        steps{
-            sh "sed -i 's/VERSION/${BUILD_NUMBER}/g' docker-compose.yml"
+            sh "docker push 800161990735.dkr.ecr.ap-south-1.amazonaws.com/spring-boot"
         }
     }
     
