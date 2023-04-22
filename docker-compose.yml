@@ -38,8 +38,8 @@ services:
     
 volumes:
   mongodb:
-    driver: overlay
+    driver: local
     
 networks:
   springappnetwork:
-    driver: local
+    driver: overlay
