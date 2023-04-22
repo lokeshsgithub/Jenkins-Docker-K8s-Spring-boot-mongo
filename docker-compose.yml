@@ -25,7 +25,7 @@ services:
     - springbootappoverlay
 networks:
   springbootappoverlay:
-    driver: overlay
+     external: true
 volumes:
   mongodbvol:
     external: true
