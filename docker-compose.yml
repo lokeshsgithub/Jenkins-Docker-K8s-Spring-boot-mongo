@@ -3,7 +3,7 @@ services:
   springbootapp:
     depends_on:
       - mongo
-    image: lokeshsdockerhub/springboot:VERSION
+    image: lokeshsdockerhub/spring_boot:VERSION
     ports:
       - 8080:8080
     environment:
