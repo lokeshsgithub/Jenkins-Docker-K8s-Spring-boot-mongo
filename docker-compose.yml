@@ -1,6 +1,8 @@
 version: '3'
 services:
   springbootapp:
+    depends_on:
+      - mongo
     image: lokeshsdockerhub/springboot:VERSION
     ports:
       - 8080:8080
@@ -10,17 +12,17 @@ services:
       - MONGO_DB_PASSWORD=devdb@123
     networks:
       - springbootappoverlay
-    depends_on:
-      - mongo
+
   mongo:
     image: mongo
     environment:
       - MONGO_INITDB_ROOT_USERNAME=devdb
       - MONGO_INITDB_ROOT_PASSWORD=devdb@123
-    networks:
-      - springbootappoverlay
     volumes:
-      - mongodbvol
+      - mongodbvol:/data/db
+    restart: always
+    networks:
+    - springbootappoverlay
 networks:
   springbootappoverlay:
     driver: overlay
