@@ -1,0 +1,37 @@
+version: '3'
+services:
+   springboot:
+      image: 800161990735.dkr.ecr.ap-south-1.amazonaws.com/spring-boot-mongo:version
+      ports:
+       - 9090:9090
+      environment:
+      - MONGO_DB_HOSTNAME=mongo
+      - MONGO_DB_USERNAME=devdb
+      - MONGO_DB_PASSWORD=devdb@123
+      networks:
+       - springbootoverlay
+      depends_on:
+       - mongo
+      deploy:
+       replicas: 2
+       update_config:
+         parallelisam: 1
+         delay: 20s  
+
+   mongo:
+      image: mongo
+      environment:
+      - MONGO_INITDB_ROOT_USERNAME=devdb
+      - MONGO_INITDB_ROOT_PASSWORD=devdb@123
+      networks:
+       - springbootoverlay
+      volumes:
+       - mongodb:/data/db
+networks:
+  springbootoverlay:
+    driver: overlay
+volumes:
+  mongodb:
+    driver: local
+    
+
