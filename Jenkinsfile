@@ -59,7 +59,7 @@ pipeline {
             sshagent(['ubuntu_credentials']) {
            sh "scp -o stricthostkeychecking=no docker-compose.yml ubuntu@172.31.35.163:/home/ubuntu/docker-compose.yml"
            sh "aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 800161990735.dkr.ecr.ap-south-1.amazonaws.com"
-           sh "ssh -o stricthostkeychecking=no docker-compose.yml ubuntu@172.31.35.163 docker stack rm spring_boot"
+           sh "ssh -o stricthostkeychecking=no ubuntu@172.31.35.163 docker stack rm spring_boot"
            sh "ssh -o stricthostkeychecking=no ubuntu@172.31.35.163 docker stack deploy --compose-file docker-compose.yml spring_boot"
        }
     }
