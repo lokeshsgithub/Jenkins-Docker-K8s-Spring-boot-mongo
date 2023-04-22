@@ -57,15 +57,13 @@ pipeline {
     stage('Deploy the Image to Docker stack'){
         steps{
             sshagent(['ubuntu_credentials']) {
-           //sh "scp -o stricthostkeychecking=no docker-compose.yml ubuntu@172.31.35.163:/home/ubuntu/docker-compose.yml"
+           sh "scp -o stricthostkeychecking=no docker-compose.yml ubuntu@172.31.35.163:/home/ubuntu/docker-compose.yml"
            sh "ssh -o stricthostkeychecking=no ubuntu@172.31.35.163 docker stack deploy --compose-file docker-compose.yml spring_boot"
        }
     }
    
     }
-
-
-
+    
     }
 
 }
