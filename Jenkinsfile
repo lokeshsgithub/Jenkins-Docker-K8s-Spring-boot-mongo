@@ -2,7 +2,9 @@ pipeline {
     agent {
         label 'citibanknode'
     }
-     
+    environment{
+        buildNumber = "BUILD_NUMBER"
+    }
     tools {
         maven 'maven3.9.0'
     }
@@ -35,14 +37,14 @@ pipeline {
     
     stage('Building the Docker Image'){
         steps{
-            sh "docker build -t 800161990735.dkr.ecr.ap-south-1.amazonaws.com/spring-boot ."
+            sh "docker build -t 800161990735.dkr.ecr.ap-south-1.amazonaws.com/spring-boot:$BUILD_NUMBER ."
         }
     }
       
     stage('Push the image into ECR Registry'){
         steps{
             sh "aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 800161990735.dkr.ecr.ap-south-1.amazonaws.com"
-            sh "docker push 800161990735.dkr.ecr.ap-south-1.amazonaws.com/spring-boot"
+            sh "docker push 800161990735.dkr.ecr.ap-south-1.amazonaws.com/spring-boot:$BUILD_NUMBER"
         }
     }
     
@@ -50,8 +52,9 @@ pipeline {
         steps{
             sshagent(['ubuntu_credentials']) {
            sh "aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 800161990735.dkr.ecr.ap-south-1.amazonaws.com"
+           sh "scp -o stricthostkeychecking=no compose.yml ubuntu@172.31.35.163:"
            sh "ssh -o stricthostkeychecking=no ubuntu@172.31.35.163 docker stack rm spring_boot"
-           sh "ssh -o stricthostkeychecking=no ubuntu@172.31.35.163 docker stack deploy --compose-file docker-compose.yml spring_boot"
+           sh "ssh -o stricthostkeychecking=no ubuntu@172.31.35.163 docker stack deploy --compose-file compose.yml spring_boot"
        }
     }
    
