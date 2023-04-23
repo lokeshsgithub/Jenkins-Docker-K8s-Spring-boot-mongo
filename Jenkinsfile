@@ -40,7 +40,15 @@ pipeline {
             sh "docker build -t 800161990735.dkr.ecr.ap-south-1.amazonaws.com/spring-boot:$BUILD_NUMBER ."
         }
     }
-      
+
+    stage('Scan the image: trivy') {
+          steps{
+              sh "trivy image 800161990735.dkr.ecr.ap-south-1.amazonaws.com/spring-boot:$BUILD_NUMBER > scan.txt"
+              sh "cat scan.txt"
+          }
+      }
+
+
     stage('Push the image into ECR Registry'){
         steps{
             sh "aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 800161990735.dkr.ecr.ap-south-1.amazonaws.com"
@@ -48,6 +56,12 @@ pipeline {
         }
     }
     
+    stage('Update the Image tag : composefile') {
+          steps{
+              sh "sed -i 's/VERSION/${BUILD_NUMBER}/g' composefile.yml"
+          }
+      }
+
     stage('Deploy the Image to Docker stack'){
         steps{
             sshagent(['ubuntu_credentials']) {
