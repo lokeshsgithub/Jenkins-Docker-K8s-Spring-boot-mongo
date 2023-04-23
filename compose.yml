@@ -27,9 +27,9 @@ services:
        - mongodb:/data/db
 networks:
   springbootoverlay:
-    driver: overlay
+    external: true
 volumes:
   mongodb:
-    driver: local
+    external: true
 
 
