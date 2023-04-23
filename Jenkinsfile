@@ -58,7 +58,7 @@ pipeline {
     
     stage('Update the Image tag : composefile') {
           steps{
-              sh "sed -i 's/VERSION/${BUILD_NUMBER}/g' composefile.yml"
+              sh "sed -i 's/VERSION/${BUILD_NUMBER}/g' compose.yml"
           }
       }
 
