@@ -26,6 +26,12 @@ stages {
         }
     }
 
+    stage('Integration of test cases : Maven') {
+        steps{
+            sh "mvn verify -DskipunitTests"
+        }
+    }
+
 }//stages closed
 
 post{
