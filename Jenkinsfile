@@ -36,9 +36,9 @@ stages {
         steps{
             withSonarQubeEnv(credentialsId: 'sonarqube-credentials',installationName: 'sonarqube') {
                 sh "mvn clean package sonar:sonar"
-        }
-    }
-    
+         }
+      }
+  }
 
 }//stages closed
 
