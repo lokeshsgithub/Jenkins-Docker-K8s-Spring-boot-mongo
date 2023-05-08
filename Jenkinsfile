@@ -60,6 +60,12 @@ stages {
         }
     }
 
+    stage('Push the image : Dockerhub'){
+        steps{
+            sh "docker push lokeshsdockerhub/springapp:$BUILD_NUMBER"
+        }
+    }
+
 }//stages closed
 
 post{
