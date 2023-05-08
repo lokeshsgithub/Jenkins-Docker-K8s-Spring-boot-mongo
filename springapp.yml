@@ -3,6 +3,7 @@ kind: Deployment
 metadata:
   name: springapprs
 spec:
+  replicas: 3
   selector:
     matchLabels:
       app: springapp
@@ -28,7 +29,7 @@ spec:
        - name: MONGO_DB_USERNAME
          value: devdb
        - name: MONGO_DB_PASSWORD
-         value: devvdb@123
+         value: devdb@123
 ---
 apiVersion: v1 
 kind: Service
@@ -42,5 +43,5 @@ spec:
   - port: 80
     targetPort: 8080
     nodePort: 31000
-  
+
   
