@@ -54,6 +54,11 @@ stages {
         }
     }
     
+    stage('scan the image: Trivy'){
+        steps{
+            sh "trivy image lokeshsdockerhub/springapp:$BUILD_NUMBER"
+        }
+    }
 
 }//stages closed
 
