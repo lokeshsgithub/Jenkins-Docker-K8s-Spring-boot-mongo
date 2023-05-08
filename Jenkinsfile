@@ -66,10 +66,21 @@ stages {
         }
     }
     
+    stage('Update the image tag in k8s'){
+        steps{
+            sh "sed -i 's/TAG/${BUILD_NUMBER}/g' springapp.yml"
+        }
+    }
+
     stage('Deploy the docker image into the k8s cluster'){
         steps{
-            sh "kubectl apply -f mongo.yml"
             sh "kubectl apply -f springapp.yml"
+        }
+    }
+
+    stage('Deploy the mongodb into the k8s cluster'){
+        steps{
+            sh "kubectl apply -f mongo.yml"
         }
     }
 
