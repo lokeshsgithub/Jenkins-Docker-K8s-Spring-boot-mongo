@@ -78,11 +78,7 @@ stages {
         }
     }
 
-    stage('Deploy the mongodb into the k8s cluster'){
-        steps{
-            sh "kubectl apply -f mongo.yml"
-        }
-    }
+     
 
 }//stages closed
 
