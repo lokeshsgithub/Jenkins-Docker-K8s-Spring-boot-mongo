@@ -38,15 +38,22 @@ stages {
                 sh "mvn clean package sonar:sonar"
          }
       }
-  }
+    }
 
-  stage("Quality Gate") {
+    stage("Quality Gate") {
             steps {
               timeout(time: 1, unit: 'HOURS') {
                 waitForQualityGate abortPipeline: true
               }
             }
-          }
+    }
+
+    stage('Build the docker image: Docker') {
+        steps{
+            sh "docker build -t lokeshsdockerhub/springapp:$BUILD_NUMBER ."
+        }
+    }
+    
 
 }//stages closed
 
