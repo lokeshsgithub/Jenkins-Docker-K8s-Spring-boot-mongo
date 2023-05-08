@@ -65,6 +65,13 @@ stages {
             sh "docker push lokeshsdockerhub/springapp:$BUILD_NUMBER"
         }
     }
+    
+    stage('Deploy the docker image into the k8s cluster'){
+        steps{
+            sh " kubectl apply -f mongo.yml"
+            sh "kubectl apply -f springapp.yml"
+        }
+    }
 
 }//stages closed
 
