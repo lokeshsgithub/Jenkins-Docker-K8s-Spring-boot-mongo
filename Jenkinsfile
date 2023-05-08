@@ -20,6 +20,12 @@ stages {
         }
     }
 
+    stage('Run unit tests: Maven'){
+        steps{
+            sh "mvn test"
+        }
+    }
+
 }//stages closed
 
 post{
