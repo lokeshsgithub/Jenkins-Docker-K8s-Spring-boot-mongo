@@ -28,6 +28,14 @@ spec:
               value: devdb
             - name: MONGO_INITDB_ROOT_PASSWORD
               value: devdb@123
+          volumeMounts:
+          - name: mongodbvol
+            path: /data/db
+      volumes:
+      - name: mongodbvol
+        nfs:
+         server: 172.31.34.88
+         path: /mnt/nfs_share
 ---
 apiVersion: v1
 kind: Service
